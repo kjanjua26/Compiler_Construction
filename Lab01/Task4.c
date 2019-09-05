@@ -14,12 +14,12 @@ int main(){
 }
 
 void _sumOfDigits(int a){
-	int t, sum = 0, remainder;
-	t = a;
+	int temp, sum = 0, remainder;
+	temp = a;
 	while (t != 0){
 		remainder = t % 10;
 		sum += remainder;
-		t = t / 10;
+		temp = temp / 10;
 	}
 	printf("The sum of digits of %d is %d\n", a, sum);
 }
