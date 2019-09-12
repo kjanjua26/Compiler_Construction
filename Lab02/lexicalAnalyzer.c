@@ -32,6 +32,7 @@ void countLines(FILE* fileptr){
 
 void checkIdentifier(FILE* fileptr){
     char chr;
+    int ignoreSpaces = 0;
     int count_lines = 0;
     chr = getc(fileptr);
     while (chr != EOF){
@@ -40,6 +41,8 @@ void checkIdentifier(FILE* fileptr){
         }
         else if(isdigit(chr)){
             printf("%c is a digit!\n", chr);
+        }else if (chr == ' '){
+            ignoreSpaces = 1;
         }else{
             printf("%c is a special character!\n", chr);
         }
