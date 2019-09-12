@@ -1,52 +1,71 @@
-#include<stdio.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include<ctype.h>
-#define MAXCHAR 1000
 
-void countLines(FILE*);
-void checkIdentifier(FILE*);
+#define MAX_ID_LEN 128
 
-int main(){
-    char* filename = "/Users/Janjua/Desktop/BSCS/Semester 7th/Compiler Construction/Labs/Lab02/inp.txt";
-    FILE *fileptr;
-    fileptr = fopen(filename, "r");
-    checkIdentifier(fileptr);
-    fclose(fileptr);
-    fileptr = fopen(filename, "r");
-    countLines(fileptr);
-    return 0;
+int isop(char);
+int isidentifier(char*);
+int checkIfDigit(char *);
+
+int main() {
+	char buffer[MAX_ID_LEN], ch;
+	FILE* fp;
+	fp = fopen("inp.txt", "r");
+	if (fp == NULL) {
+		printf("Error while opening the file\n");
+		return -1;
+	}
+	int i, lines; i = lines = 1;
+	while ((ch = fgetc(fp)) != EOF) {
+		if (isop(ch))
+			printf("%c is an operator.\n", ch);
+		else if (isalnum(ch))
+			buffer[i++] = ch;
+		else if ((ch == ' ' || ch == '\n') && (i != 0)) {
+			buffer[i] = '\0';
+			i = 0;
+            
+			if (isidentifier(buffer))
+				printf("%s is an indentifier.\n", buffer);
+			if (ch == '\n')
+				lines++;
+		}
+	}
+	printf("There are %d line(s) in the given file.\n", lines-1);
+	fclose(fp);
+	return 0;
 }
 
-void countLines(FILE* fileptr){
-    char chr;
-    int count_lines = 0;
-    chr = getc(fileptr);
-    while (chr != EOF){
-        if (chr == '\n'){
-            count_lines++;
-        }
-        chr = getc(fileptr);
-    }
-    printf("There are %d line(s) in the file\n", count_lines+1);
+int isop(char tok){
+	char* ops = "!^+-*/%=";
+	for (char* c = ops; *c != '\0'; ++c) {
+		if (*c == tok)
+			return 1;
+	}
+	return 0;
 }
 
-void checkIdentifier(FILE* fileptr){
-    char chr;
-    int ignoreSpaces = 0;
-    int count_lines = 0;
-    chr = getc(fileptr);
-    while (chr != EOF){
-        if(isalpha(chr)){
-            printf("%c is an identifier!\n", chr);
-        }
-        else if(isdigit(chr)){
-            printf("%c is a digit!\n", chr);
-        }else if (chr == ' '){
-            ignoreSpaces = 1;
-        }else{
-            printf("%c is a special character!\n", chr);
-        }
-        chr = getc(fileptr);
-    }
+int isidentifier(char *input){
+	if (!isalpha((unsigned char)input[0]))
+		return 0;
 
+	char* iter = input + 1;
+	while (iter != NULL && *iter != '\0'){
+		if (isalpha(*iter) || *iter == '_')
+			++iter;
+		else{
+			return 0;
+		}
+	}
+	return 1;
+}
+
+int checkIfDigit(char *input){
+    if(isdigit(input)){
+        printf("%c\n", input);
+        return 1;
+    }
+    else
+        return 0;
 }
